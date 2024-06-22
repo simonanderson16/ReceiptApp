@@ -1,66 +1,67 @@
-import { useState } from "react";
-import {
-  Button,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  SafeAreaView,
-} from "react-native";
-import { CameraView, useCameraPermissions } from 'expo-camera';
-import TakePhoto from "../components/TakePhoto";
+import { useEffect, useState } from "react"
+import { StyleSheet, TouchableOpacity, View, SafeAreaView } from "react-native"
+import { Button, Text } from "@ui-kitten/components"
+import { CameraView, useCameraPermissions } from "expo-camera"
+import TakePhoto from "../components/TakePhoto"
 
 const NewReceipt = () => {
-  const [permission, requestPermission] = useCameraPermissions();
+	const [permission, requestPermission] = useCameraPermissions()
+	const [photoUri, setPhotoUri] = useState(null)
+	const [openTakePhoto, setOpenTakePhoto] = useState(false)
 
-  if (!permission) {
-    // Camera permissions are still loading.
-    return <View>
-      <Text>Permissions Not Granted</Text>
-    </View>;
+  const handleOpenTakePhoto = async () => {
+    if (!permission || !permission.granted) {
+      await requestPermission()
+    } else {
+      setOpenTakePhoto(true)
+    }
   }
 
-  if (!permission.granted) {
-    // Camera permissions are not granted yet.
-    return (
-      <View style={styles.container}>
-        <Text style={{ textAlign: "center" }}>
-          We need your permission to show the camera
-        </Text>
-        <Button onPress={requestPermission} title="Take Photo" />
-      </View>
-    );
-  }
+	const handleConfirmPhoto = (newPhotoUri) => {
+		setPhotoUri(newPhotoUri)
+		setOpenTakePhoto(false)
+    console.log(newPhotoUri)
+	}
 
-  return (
-    <TakePhoto />
-  );
-};
+	if (openTakePhoto) {
+		return <TakePhoto handleConfirmPhoto={handleConfirmPhoto} />
+	}
+
+	return (
+		<SafeAreaView style={styles.container}>
+			<Text category="h1">New Receipt</Text>
+			<View>
+				<Button onPress={() => handleOpenTakePhoto()}>Take Photo</Button>
+				<Button>Upload Photo</Button>
+			</View>
+		</SafeAreaView>
+	)
+}
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-  },
-  camera: {
-    flex: 1,
-  },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: "row",
-    backgroundColor: "transparent",
-    margin: 64,
-  },
-  button: {
-    flex: 1,
-    alignSelf: "flex-end",
-    alignItems: "center",
-  },
-  text: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "white",
-  },
-});
+	container: {
+		flex: 1,
+		justifyContent: "center",
+	},
+	camera: {
+		flex: 1,
+	},
+	buttonContainer: {
+		flex: 1,
+		flexDirection: "row",
+		backgroundColor: "transparent",
+		margin: 64,
+	},
+	button: {
+		flex: 1,
+		alignSelf: "flex-end",
+		alignItems: "center",
+	},
+	text: {
+		fontSize: 24,
+		fontWeight: "bold",
+		color: "white",
+	},
+})
 
-export default NewReceipt;
+export default NewReceipt

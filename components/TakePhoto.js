@@ -1,16 +1,11 @@
 import React, { useState, useRef } from "react"
-import { StyleSheet, Text, TouchableOpacity, View, Image, SafeAreaView } from "react-native"
+import { StyleSheet, TouchableOpacity, View, Image, SafeAreaView } from "react-native"
 import { CameraView } from "expo-camera"
-import { Button } from "@ui-kitten/components"
+import { Button, Text } from "@ui-kitten/components"
 
 const TakePhoto = ({ handleConfirmPhoto }) => {
-	const [facing, setFacing] = useState("back")
 	const [photoUri, setPhotoUri] = useState(null)
 	const cameraRef = useRef(null)
-
-	function toggleCameraFacing() {
-		setFacing((current) => (current === "back" ? "front" : "back"))
-	}
 
 	const takePhoto = async () => {
 		if (cameraRef.current) {
@@ -32,14 +27,9 @@ const TakePhoto = ({ handleConfirmPhoto }) => {
 					</View>
 				</View>
 			) : (
-				<CameraView style={styles.camera} type={facing} ref={cameraRef}>
+				<CameraView style={styles.camera} ref={cameraRef}>
 					<View style={styles.buttonContainer}>
-						<TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
-							<Text style={styles.text}>Flip Camera</Text>
-						</TouchableOpacity>
-						<TouchableOpacity style={styles.button} onPress={takePhoto}>
-							<Text style={styles.text}>Take Photo</Text>
-						</TouchableOpacity>
+						<TouchableOpacity style={styles.cameraButton} onPress={takePhoto} />
 					</View>
 				</CameraView>
 			)}
@@ -57,19 +47,16 @@ const styles = StyleSheet.create({
 	},
 	buttonContainer: {
 		flex: 1,
-		flexDirection: "row",
-		backgroundColor: "transparent",
-		margin: 64,
-	},
-	button: {
-		flex: 1,
-		alignSelf: "flex-end",
+		justifyContent: "flex-end",
 		alignItems: "center",
+		marginBottom: 32,
 	},
-	text: {
-		fontSize: 24,
-		fontWeight: "bold",
-		color: "white",
+	cameraButton: {
+		width: 72,
+		height: 72,
+		backgroundColor: "white",
+		borderCurve: "circular",
+		borderRadius: 72,
 	},
 	previewContainer: {
 		flex: 1,
@@ -82,6 +69,7 @@ const styles = StyleSheet.create({
 		height: "80%",
 		marginVertical: 32,
 		resizeMode: "contain",
+		borderCurve: "circular",
 		borderRadius: 16,
 	},
 	previewActionsContainer: {
@@ -89,8 +77,8 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
+		rowGap: 16,
 	},
-	previewActionsButton: {},
 })
 
 export default TakePhoto
