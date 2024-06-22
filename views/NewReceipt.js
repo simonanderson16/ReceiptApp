@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { StyleSheet, TouchableOpacity, View, SafeAreaView } from "react-native"
 import { Button, Text } from "@ui-kitten/components"
 import { CameraView, useCameraPermissions } from "expo-camera"
+import * as ImagePicker from "expo-image-picker"; 
 import TakePhoto from "../components/TakePhoto"
 
 const NewReceipt = () => {
@@ -9,18 +10,34 @@ const NewReceipt = () => {
 	const [photoUri, setPhotoUri] = useState(null)
 	const [openTakePhoto, setOpenTakePhoto] = useState(false)
 
-  const handleOpenTakePhoto = async () => {
-    if (!permission || !permission.granted) {
-      await requestPermission()
-    } else {
-      setOpenTakePhoto(true)
-    }
-  }
+	const handleOpenTakePhoto = async () => {
+		if (!permission || !permission.granted) {
+			await requestPermission()
+		} else {
+			setOpenTakePhoto(true)
+		}
+	}
 
 	const handleConfirmPhoto = (newPhotoUri) => {
 		setPhotoUri(newPhotoUri)
 		setOpenTakePhoto(false)
-    console.log(newPhotoUri)
+		console.log(newPhotoUri)
+	}
+
+	const pickImage = async () => {
+		const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
+
+		if (status !== "granted") {
+			// If permission is denied, show an alert
+			Alert.alert("Permission Denied", `Sorry, we need camera roll permission to upload images.`)
+		} else {
+			const result = await ImagePicker.launchImageLibraryAsync()
+
+			if (!result.canceled) {
+				setPhotoUri(result.assets[0].uri)
+        console.log(result.assets[0].uri)
+			}
+		}
 	}
 
 	if (openTakePhoto) {
@@ -32,7 +49,7 @@ const NewReceipt = () => {
 			<Text category="h1">New Receipt</Text>
 			<View>
 				<Button onPress={() => handleOpenTakePhoto()}>Take Photo</Button>
-				<Button>Upload Photo</Button>
+				<Button onPress={() => pickImage()}>Upload Photo</Button>
 			</View>
 		</SafeAreaView>
 	)
