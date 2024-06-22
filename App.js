@@ -1,22 +1,24 @@
-import { Friends, NewReceipt, Outings, Parties, Profile } from "./views";
-import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { FontAwesome6 } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
 import { auth } from "./firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 import Landing from "./views/Landing";
 import { useState, useEffect } from "react";
+import * as eva from "@eva-design/eva"
+import { ApplicationProvider } from "@ui-kitten/components"
+import { Friends, NewReceipt, Outings, Parties, Profile } from "./views"
+import { NavigationContainer } from "@react-navigation/native"
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
+import { FontAwesome6 } from "@expo/vector-icons"
+import { Ionicons } from "@expo/vector-icons"
+import { AntDesign } from "@expo/vector-icons"
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator()
 const screenOptions = {
-  tabBarShowLabel: true,
-  headerShown: false,
-  tabBarStyle: {
-    backgroundColor: "#fff",
-  },
-};
+	tabBarShowLabel: true,
+	headerShown: false,
+	tabBarStyle: {
+		backgroundColor: "#fff",
+	},
+}
 
 export default function App() {
   const [signedIn, setSignedIn] = useState(true);
@@ -31,7 +33,9 @@ export default function App() {
   //   });
   // }, []);
 
-  return signedIn ? (
+  return (
+    <ApplicationProvider {...eva} theme={eva.light}>
+      {signedIn ? (
     <NavigationContainer>
       <Tab.Navigator screenOptions={screenOptions}>
         <Tab.Screen
@@ -113,5 +117,7 @@ export default function App() {
     </NavigationContainer>
   ) : (
     <Landing />
-  );
+  )}
+    </ApplicationProvider>
+  )
 }
