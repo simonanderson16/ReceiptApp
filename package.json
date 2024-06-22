@@ -9,14 +9,19 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@eva-design/eva": "^2.2.0",
     "@react-navigation/bottom-tabs": "^6.5.20",
     "@react-navigation/native": "^6.1.17",
+    "@types/react": "~18.2.79",
+    "@ui-kitten/components": "^5.3.1",
     "expo": "~51.0.14",
+    "expo-camera": "~15.0.11",
     "expo-status-bar": "~1.12.1",
     "react": "18.2.0",
     "react-native": "0.74.2",
+    "react-native-svg": "^15.3.0",
     "react-native-vector-icons": "^10.1.0",
-    "expo-camera": "~15.0.11"
+    "typescript": "~5.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
