@@ -1,11 +1,13 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import { Friends, NewReceipt, Outings, Parties, Profile } from "./tabs";
+import { Friends, NewReceipt, Outings, Parties, Profile } from "./views";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { FontAwesome6 } from "@expo/vector-icons";
-import { Ionicons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
+import { auth } from "./firebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
+import Landing from "./views/Landing";
+import { useState, useEffect } from "react";
 
 const Tab = createBottomTabNavigator();
 const screenOptions = {
@@ -17,7 +19,19 @@ const screenOptions = {
 };
 
 export default function App() {
-  return (
+  const [signedIn, setSignedIn] = useState(true);
+
+  // useEffect(() => {
+  //   onAuthStateChanged(auth, (user) => {
+  //     if (user) {
+  //       setSignedIn(true);
+  //     } else {
+  //       setSignedIn(false);
+  //     }
+  //   });
+  // }, []);
+
+  return signedIn ? (
     <NavigationContainer>
       <Tab.Navigator screenOptions={screenOptions}>
         <Tab.Screen
@@ -97,5 +111,7 @@ export default function App() {
         />
       </Tab.Navigator>
     </NavigationContainer>
+  ) : (
+    <Landing />
   );
 }
