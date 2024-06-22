@@ -1,3 +1,7 @@
+import { auth } from "./firebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
+import Landing from "./views/Landing";
+import { useState, useEffect } from "react";
 import * as eva from "@eva-design/eva"
 import { ApplicationProvider } from "@ui-kitten/components"
 import { Friends, NewReceipt, Outings, Parties, Profile } from "./views"
@@ -17,57 +21,103 @@ const screenOptions = {
 }
 
 export default function App() {
-	return (
-		<ApplicationProvider {...eva} theme={eva.light}>
-			<NavigationContainer>
-				<Tab.Navigator screenOptions={screenOptions}>
-					<Tab.Screen
-						name="Outings"
-						component={Outings}
-						options={{
-							tabBarIcon: ({ focused }) => {
-								return <FontAwesome6 name="receipt" size={24} color={focused ? "black" : "gray"} />
-							},
-						}}
-					/>
-					<Tab.Screen
-						name="Parties"
-						component={Parties}
-						options={{
-							tabBarIcon: ({ focused }) => {
-								return <FontAwesome6 name="people-line" size={24} color={focused ? "black" : "gray"} />
-							},
-						}}
-					/>
-					<Tab.Screen
-						name="New Receipt"
-						component={NewReceipt}
-						options={{
-							tabBarIcon: ({ focused }) => {
-								return <AntDesign name="pluscircleo" size={24} color={focused ? "black" : "gray"} />
-							},
-						}}
-					/>
-					<Tab.Screen
-						name="Friends"
-						component={Friends}
-						options={{
-							tabBarIcon: ({ focused }) => {
-								return <Ionicons name="people" size={24} color={focused ? "black" : "gray"} />
-							},
-						}}
-					/>
-					<Tab.Screen
-						name="Profile"
-						component={Profile}
-						options={{
-							tabBarIcon: ({ focused }) => {
-								return <Ionicons name="person" size={24} color={focused ? "black" : "gray"} />
-							},
-						}}
-					/>
-				</Tab.Navigator>
-			</NavigationContainer>
-		</ApplicationProvider>
-	)
+  const [signedIn, setSignedIn] = useState(true);
+
+  // useEffect(() => {
+  //   onAuthStateChanged(auth, (user) => {
+  //     if (user) {
+  //       setSignedIn(true);
+  //     } else {
+  //       setSignedIn(false);
+  //     }
+  //   });
+  // }, []);
+
+  return (
+    <ApplicationProvider {...eva} theme={eva.light}>
+      {signedIn ? (
+    <NavigationContainer>
+      <Tab.Navigator screenOptions={screenOptions}>
+        <Tab.Screen
+          name="Outings"
+          component={Outings}
+          options={{
+            tabBarIcon: ({ focused }) => {
+              return (
+                <FontAwesome6
+                  name="receipt"
+                  size={24}
+                  color={focused ? "black" : "gray"}
+                />
+              );
+            },
+          }}
+        />
+        <Tab.Screen
+          name="Parties"
+          component={Parties}
+          options={{
+            tabBarIcon: ({ focused }) => {
+              return (
+                <FontAwesome6
+                  name="people-line"
+                  size={24}
+                  color={focused ? "black" : "gray"}
+                />
+              );
+            },
+          }}
+        />
+        <Tab.Screen
+          name="New Receipt"
+          component={NewReceipt}
+          options={{
+            tabBarIcon: ({ focused }) => {
+              return (
+                <AntDesign
+                  name="pluscircleo"
+                  size={24}
+                  color={focused ? "black" : "gray"}
+                />
+              );
+            },
+          }}
+        />
+        <Tab.Screen
+          name="Friends"
+          component={Friends}
+          options={{
+            tabBarIcon: ({ focused }) => {
+              return (
+                <Ionicons
+                  name="people"
+                  size={24}
+                  color={focused ? "black" : "gray"}
+                />
+              );
+            },
+          }}
+        />
+        <Tab.Screen
+          name="Profile"
+          component={Profile}
+          options={{
+            tabBarIcon: ({ focused }) => {
+              return (
+                <Ionicons
+                  name="person"
+                  size={24}
+                  color={focused ? "black" : "gray"}
+                />
+              );
+            },
+          }}
+        />
+      </Tab.Navigator>
+    </NavigationContainer>
+  ) : (
+    <Landing />
+  )}
+    </ApplicationProvider>
+  )
 }
