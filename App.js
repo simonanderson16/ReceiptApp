@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
-import { Friends, NewReceipt, Outings, Parties, Profile } from "./screens";
+import { Friends, NewReceipt, Outings, Parties, Profile } from "./tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { FontAwesome6 } from "@expo/vector-icons";
