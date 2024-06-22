@@ -2,8 +2,11 @@ import { useEffect, useState } from "react"
 import { StyleSheet, TouchableOpacity, View, SafeAreaView } from "react-native"
 import { Button, Text } from "@ui-kitten/components"
 import { CameraView, useCameraPermissions } from "expo-camera"
-import * as ImagePicker from "expo-image-picker"; 
+import * as ImagePicker from "expo-image-picker"
 import TakePhoto from "../components/TakePhoto"
+
+import axios from "axios"
+import * as FileSystem from "expo-file-system"
 
 const NewReceipt = () => {
 	const [permission, requestPermission] = useCameraPermissions()
@@ -22,6 +25,8 @@ const NewReceipt = () => {
 		setPhotoUri(newPhotoUri)
 		setOpenTakePhoto(false)
 		console.log(newPhotoUri)
+
+    predictExpenseReceipt(newPhotoUri)
 	}
 
 	const pickImage = async () => {
@@ -35,7 +40,9 @@ const NewReceipt = () => {
 
 			if (!result.canceled) {
 				setPhotoUri(result.assets[0].uri)
-        console.log(result.assets[0].uri)
+				console.log(result.assets[0].uri)
+
+				predictExpenseReceipt(result.assets[0].uri)
 			}
 		}
 	}
@@ -82,3 +89,42 @@ const styles = StyleSheet.create({
 })
 
 export default NewReceipt
+
+const predictExpenseReceipt = async (documentUri) => {
+	const apiUrl = "https://api.mindee.net/v1/products/mindee/expense_receipts/v5/predict"
+	const apiKey = process.env.EXPO_PUBLIC_MINDEE_API_KEY
+
+	try {
+		const base64 = await convertUriToBase64(documentUri)
+
+		const formData = new FormData()
+		formData.append("document", base64)
+
+		const response = await axios.post(apiUrl, formData, {
+			headers: {
+				"Content-Type": "multipart/form-data",
+				"Authorization": `Token ${apiKey}`,
+			},
+		})
+
+		console.log("Mindee API response:", response.data)
+    const responseString = JSON.stringify(response.data)
+    console.log(responseString)
+		return response.data // Handle the response as needed in your application
+	} catch (error) {
+		console.error("Error predicting expense receipt:", error.response)
+		throw error // Handle errors in a meaningful way for your app
+	}
+}
+
+const convertUriToBase64 = async (uri) => {
+	try {
+		const base64 = await FileSystem.readAsStringAsync(uri, {
+			encoding: FileSystem.EncodingType.Base64,
+		})
+		return base64
+	} catch (error) {
+		console.error("Error converting file to base64:", error)
+		throw error
+	}
+}
