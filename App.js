@@ -1,4 +1,4 @@
-import { auth } from "./firebaseConfig";
+import { auth } from "./firebase/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 import Landing from "./views/Landing";
 import { useState, useEffect } from "react";
@@ -40,10 +40,10 @@ export default function App() {
     return (
         <ApplicationProvider {...eva} theme={eva.light}>
             {loading ? (
-              <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                <Spinner size="giant" />
-                <Text style={{marginVertical: 12}}>Loading</Text>
-              </View>
+                <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                    <Spinner size="giant" />
+                    <Text style={{ marginVertical: 12 }}>Loading</Text>
+                </View>
             ) : signedIn ? (
                 <NavigationContainer>
                     <Tab.Navigator screenOptions={screenOptions}>
@@ -100,4 +100,3 @@ export default function App() {
         </ApplicationProvider>
     );
 }
-

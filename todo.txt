@@ -1,0 +1,2 @@
+- error handling for creating account (no duplicate usernames, etc.)
+- ability to upload profile picture
