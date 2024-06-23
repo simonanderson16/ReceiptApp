@@ -21,17 +21,17 @@ const screenOptions = {
 }
 
 export default function App() {
-  const [signedIn, setSignedIn] = useState(true);
+  const [signedIn, setSignedIn] = useState(false);
 
-  // useEffect(() => {
-  //   onAuthStateChanged(auth, (user) => {
-  //     if (user) {
-  //       setSignedIn(true);
-  //     } else {
-  //       setSignedIn(false);
-  //     }
-  //   });
-  // }, []);
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setSignedIn(true);
+      } else {
+        setSignedIn(false);
+      }
+    });
+  }, []);
 
   return (
     <ApplicationProvider {...eva} theme={eva.light}>
