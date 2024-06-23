@@ -8,6 +8,7 @@ const Profile = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Text>Profile</Text>
+      <Text>{auth.currentUser.email}</Text>
       <Button style={styles.button} status="danger" onPress={() => signOut(auth)}>Logout</Button>
     </SafeAreaView>
   )
