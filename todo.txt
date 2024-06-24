@@ -1,3 +1,7 @@
 - error handling for creating account (no duplicate usernames, etc.)
 - ability to upload profile picture
 - ability to edit account
+- limit image file size to 10MB before uploading to Mindee
+- Make login a keyboard avoiding view
+- "Password" button on ios keyboard flashes while typing (weird bug)
+- If password is not secure enough, use a diff message besides "Error"
