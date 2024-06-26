@@ -1,5 +1,8 @@
+- create context for logged in user (username, profile pic, friends, etc.)
+    - this should be fetched on login so that there will not be load times for every page
 - error handling for creating account (no duplicate usernames, etc.)
-- ability to upload profile picture
+- ability to delete / edit profile picture
+- should you be able to set a profile picture when creating an account?
 - ability to edit account
 - limit image file size to 10MB before uploading to Mindee
 - Make login a keyboard avoiding view
