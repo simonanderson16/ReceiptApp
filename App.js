@@ -70,7 +70,7 @@ export default function App() {
                             component={NewReceipt}
                             options={{
                                 tabBarIcon: ({ focused }) => {
-                                    return <AntDesign name="pluscircleo" size={24} color={focused ? "black" : "gray"} />;
+                                    return <Ionicons name="add-circle-outline" size={24} color={focused ? "black" : "gray"} />;
                                 },
                             }}
                         />
