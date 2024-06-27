@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { View, SafeAreaView, StyleSheet, Alert, TouchableWithoutFeedback, KeyboardAvoidingView, ScrollView } from "react-native"
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth"
 import { auth } from "../firebase/firebaseConfig"
-import { Button, Input, Text, useTheme } from "@ui-kitten/components"
+import { Layout, Button, Input, Text, useTheme } from "@ui-kitten/components"
 import { Ionicons } from "@expo/vector-icons"
 import { addUser, firebaseErrorToString } from "../firebase/firebaseUtils"
 
@@ -22,7 +22,11 @@ const Landing = () => {
 
 	const renderIcon = () => (
 		<TouchableWithoutFeedback onPress={toggleSecureEntry}>
-			{secureTextEntry ? <Ionicons name="eye-off" size={24} color={theme['color-primary-default']} /> : <Ionicons name="eye" size={24} color={theme['color-primary-default']} />}
+			{secureTextEntry ? (
+				<Ionicons name="eye-off" size={24} color={theme["color-primary-default"]} />
+			) : (
+				<Ionicons name="eye" size={24} color={theme["color-primary-default"]} />
+			)}
 		</TouchableWithoutFeedback>
 	)
 
@@ -52,55 +56,57 @@ const Landing = () => {
 	}
 
 	return (
-		<SafeAreaView style={styles.container}>
-			<KeyboardAvoidingView behavior="padding" style={styles.keyboardAvoidingView}>
-				<ScrollView contentContainerStyle={styles.scrollView}>
-					<Text category="h1" style={styles.title}>
-						SplitCheck
-					</Text>
-					<Text category="c1" style={styles.subtitle}>
-						{isSignUp ? "Please create your account with an email and password" : "Please enter your email and password to sign in"}
-					</Text>
-					<View style={styles.inputContainer}>
-						{isSignUp && (
-							<>
-								<Input status="primary" style={styles.input} placeholder="First Name" value={firstName} onChangeText={setFirstName} />
-								<Input status="primary" style={styles.input} placeholder="Last Name" value={lastName} onChangeText={setLastName} />
-								<Input status="primary" style={styles.input} placeholder="Username" value={userName} onChangeText={setUserName} />
-							</>
-						)}
-						<Input
-							status="primary"
-							style={styles.input}
-							placeholder="Email"
-							value={email}
-							onChangeText={setEmail}
-							keyboardType="email-address"
-							autoCapitalize="none"
-							autoCorrect={false}
-						/>
-						<Input
-							status="primary"
-							style={styles.input}
-							placeholder="Password"
-							accessoryRight={renderIcon}
-							value={password}
-							onChangeText={setPassword}
-							secureTextEntry={secureTextEntry}
-						/>
-						<Button style={styles.button} onPress={isSignUp ? handleSignUp : handleSignIn}>
-							{isSignUp ? "Create Account" : "Sign In"}
-						</Button>
-					</View>
-					<Text style={styles.switchText}>
-						{isSignUp ? "Already have an account? " : "Don't have an account? "}
-						<Text appearance="hint" onPress={() => setIsSignUp(!isSignUp)}>
-							{isSignUp ? "Sign In" : "Sign Up"}
+		<Layout style={{ flex: 1 }}>
+			<SafeAreaView style={styles.container}>
+				<KeyboardAvoidingView behavior="padding" style={styles.keyboardAvoidingView}>
+					<ScrollView contentContainerStyle={styles.scrollView}>
+						<Text category="h1" style={styles.title}>
+							SplitCheck
 						</Text>
-					</Text>
-				</ScrollView>
-			</KeyboardAvoidingView>
-		</SafeAreaView>
+						<Text category="c1" style={styles.subtitle}>
+							{isSignUp ? "Please create your account with an email and password" : "Please enter your email and password to sign in"}
+						</Text>
+						<View style={styles.inputContainer}>
+							{isSignUp && (
+								<>
+									<Input status="primary" style={styles.input} placeholder="First Name" value={firstName} onChangeText={setFirstName} />
+									<Input status="primary" style={styles.input} placeholder="Last Name" value={lastName} onChangeText={setLastName} />
+									<Input status="primary" style={styles.input} placeholder="Username" value={userName} onChangeText={setUserName} />
+								</>
+							)}
+							<Input
+								status="primary"
+								style={styles.input}
+								placeholder="Email"
+								value={email}
+								onChangeText={setEmail}
+								keyboardType="email-address"
+								autoCapitalize="none"
+								autoCorrect={false}
+							/>
+							<Input
+								status="primary"
+								style={styles.input}
+								placeholder="Password"
+								accessoryRight={renderIcon}
+								value={password}
+								onChangeText={setPassword}
+								secureTextEntry={secureTextEntry}
+							/>
+							<Button style={styles.button} onPress={isSignUp ? handleSignUp : handleSignIn}>
+								{isSignUp ? "Create Account" : "Sign In"}
+							</Button>
+						</View>
+						<Text style={styles.switchText}>
+							{isSignUp ? "Already have an account? " : "Don't have an account? "}
+							<Text appearance="hint" onPress={() => setIsSignUp(!isSignUp)}>
+								{isSignUp ? "Sign In" : "Sign Up"}
+							</Text>
+						</Text>
+					</ScrollView>
+				</KeyboardAvoidingView>
+			</SafeAreaView>
+		</Layout>
 	)
 }
 
@@ -114,6 +120,7 @@ const styles = StyleSheet.create({
 		paddingTop: 160,
 		paddingHorizontal: 16,
 		paddingBottom: 32,
+		alignItems: "center",
 	},
 	container: {
 		flex: 1,
@@ -124,11 +131,9 @@ const styles = StyleSheet.create({
 		alignSelf: "center",
 	},
 	title: {
-		textAlign: "center",
 		marginBottom: 16,
 	},
 	subtitle: {
-		textAlign: "center",
 		marginBottom: 32,
 	},
 	input: {

@@ -3,7 +3,7 @@ import { onAuthStateChanged } from "firebase/auth"
 import Landing from "./views/Landing"
 import { useState, useEffect } from "react"
 import * as eva from "@eva-design/eva"
-import { ApplicationProvider, Layout, Spinner, Text } from "@ui-kitten/components"
+import { ApplicationProvider, Spinner, Text } from "@ui-kitten/components"
 import { Friends, NewReceipt, Outings, Parties, Profile } from "./views"
 import { NavigationContainer } from "@react-navigation/native"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
@@ -41,7 +41,6 @@ export default function App() {
 
 	return (
 		<ApplicationProvider {...eva} theme={colorScheme=== "dark" ? { ...eva.dark, ...theme } : { ...eva.light, ...theme }}>
-			<Layout style={{ flex: 1 }}>
 				{loading ? (
 					<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
 						<Spinner size="giant" />
@@ -100,7 +99,6 @@ export default function App() {
 				) : (
 					<Landing />
 				)}
-			</Layout>
 		</ApplicationProvider>
 	)
 }
