@@ -1,15 +1,16 @@
-import { Image, Text, SafeAreaView, StyleSheet } from "react-native";
+import { Image, Text, SafeAreaView, StyleSheet, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import { auth, storage } from "../firebase/firebaseConfig";
-import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
+import { auth } from "../firebase/firebaseConfig";
 import { signOut } from "firebase/auth";
 import { Button, Spinner } from "@ui-kitten/components";
-import { getUserInfo, setProfilePic } from "../firebase/firebaseUtils";
-import * as ImagePicker from "expo-image-picker";
+import { getUserInfo } from "../firebase/firebaseUtils";
+import EditProfile from "../components/EditProfile";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const Profile = () => {
     const [loading, setLoading] = useState(true);
     const [userInfo, setUserInfo] = useState({});
+    const [editing, setEditing] = useState(false);
 
     useEffect(() => {
         getUserInfo(auth.currentUser.uid).then((data) => {
@@ -18,55 +19,26 @@ const Profile = () => {
         });
     }, []);
 
-    const pickImage = async () => {
-        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== "granted") {
-            Alert.alert("Permission Denied", `Sorry, we need camera roll permission to upload images.`);
-        } else {
-            const result = await ImagePicker.launchImageLibraryAsync();
-            if (!result.canceled) {
-                uploadPhoto(result.assets[0].uri);
-            }
-        }
-    };
-
-    const uploadPhoto = async (uri) => {
-        try {
-            const blob = await getBlob(uri);
-            const storageRef = ref(storage, `profile_pics/${auth.currentUser.uid}`);
-            await uploadBytes(storageRef, blob);
-            const profilePicRef = ref(storage, `profile_pics/${auth.currentUser.uid}`);
-            const profilePicURL = await getDownloadURL(profilePicRef);
-            await setProfilePic(auth.currentUser.uid, profilePicURL);
-            setUserInfo({ ...userInfo, profilePic: profilePicURL });
-        } catch (error) {
-            console.error("Upload failed: ", error);
-        }
-    };
-
-    const getBlob = async (uri) => {
-        const response = await fetch(uri);
-        const blob = await response.blob();
-        return blob;
-    };
     return (
         <SafeAreaView style={styles.container}>
             {loading ? (
                 <Spinner size="giant" />
+            ) : editing ? (
+                <EditProfile userInfo={userInfo} setUserInfo={setUserInfo} setEditing={setEditing} setLoading={setLoading} />
             ) : (
                 <>
+                    <Button style={styles.editButton} onPress={() => setEditing(true)}>
+                        Edit
+                    </Button>
                     {userInfo.profilePic ? (
                         <Image source={{ uri: userInfo.profilePic }} style={styles.profilePic} />
                     ) : (
                         <Image source={require("../assets/defaultProfilePic.jpg")} style={styles.profilePic} />
                     )}
-                    <Text style={styles.fullName}>
+                    <Text style={styles.header}>
                         {userInfo.firstName} {userInfo.lastName}
                     </Text>
                     <Text style={styles.userName}>@{userInfo.userName}</Text>
-                    <Button status="primary" onPress={() => pickImage()}>
-                        {userInfo.profilePic ? "Change" : "Upload"} Profile Picture
-                    </Button>
                     <Button style={styles.button} status="danger" onPress={() => signOut(auth)}>
                         Logout
                     </Button>
@@ -82,7 +54,12 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
-    fullName: {
+    editButton: {
+        position: "absolute",
+        right: 8,
+        top: 48,
+    },
+    header: {
         fontSize: 24,
         fontWeight: "bold",
         marginTop: 10,
@@ -105,6 +82,18 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         position: "absolute",
         bottom: 0,
+    },
+    horizontalButtons: {
+        alignItems: "center",
+        marginVertical: 20,
+        flexDirection: "row",
+        gap: 16,
+    },
+    previewImage: {
+        width: 240,
+        height: 240,
+        borderRadius: 120,
+        marginVertical: 10,
     },
 });
 

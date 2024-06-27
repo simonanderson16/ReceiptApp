@@ -32,13 +32,22 @@ export const getUserInfo = async (uid) => {
 
 export const setProfilePic = async (uid, uri) => {
     try {
-        console.log(uid, uri)
         await updateDoc(doc(db, "users", uid), {
             profilePic: uri,
         });
         return true;
     } catch (error) {
         console.error("Error setting profile pic: ", error);
+        return false;
+    }
+}
+
+export const updateProfile = async (uid, data) => {
+    try {
+        await updateDoc(doc(db, "users", uid), data);
+        return true;
+    } catch (error) {
+        console.error("Error updating profile: ", error);
         return false;
     }
 }
