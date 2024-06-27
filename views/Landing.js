@@ -2,9 +2,9 @@ import React, { useState } from "react"
 import { View, SafeAreaView, StyleSheet, Alert, TouchableWithoutFeedback, KeyboardAvoidingView, ScrollView } from "react-native"
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth"
 import { auth } from "../firebase/firebaseConfig"
-import { Button, Input, Text } from "@ui-kitten/components"
+import { Button, Input, Text, useTheme } from "@ui-kitten/components"
 import { Ionicons } from "@expo/vector-icons"
-import { addUser } from "../firebase/firebaseUtils"
+import { addUser, firebaseErrorToString } from "../firebase/firebaseUtils"
 
 const Landing = () => {
 	const [email, setEmail] = useState("")
@@ -14,14 +14,15 @@ const Landing = () => {
 	const [lastName, setLastName] = useState("")
 	const [userName, setUserName] = useState("")
 	const [secureTextEntry, setSecureTextEntry] = useState(true)
+	const theme = useTheme()
 
 	const toggleSecureEntry = () => {
 		setSecureTextEntry(!secureTextEntry)
 	}
 
-	const renderIcon = (props) => (
+	const renderIcon = () => (
 		<TouchableWithoutFeedback onPress={toggleSecureEntry}>
-			{secureTextEntry ? <Ionicons name="eye-off" size={24} color="black" /> : <Ionicons name="eye" size={24} color="black" />}
+			{secureTextEntry ? <Ionicons name="eye-off" size={24} color={theme['color-primary-default']} /> : <Ionicons name="eye" size={24} color={theme['color-primary-default']} />}
 		</TouchableWithoutFeedback>
 	)
 
@@ -32,7 +33,7 @@ const Landing = () => {
 				Alert.alert("Success", `Welcome back ${user.email}`)
 			})
 			.catch((error) => {
-				Alert.alert("Error", error.message)
+				Alert.alert("Error", firebaseErrorToString(error))
 			})
 	}
 
@@ -46,7 +47,7 @@ const Landing = () => {
 				Alert.alert("Success", `Account created for ${user.email}`)
 			})
 			.catch((error) => {
-				Alert.alert("Error", error.message)
+				Alert.alert("Error", firebaseErrorToString(error))
 			})
 	}
 
@@ -54,8 +55,10 @@ const Landing = () => {
 		<SafeAreaView style={styles.container}>
 			<KeyboardAvoidingView behavior="padding" style={styles.keyboardAvoidingView}>
 				<ScrollView contentContainerStyle={styles.scrollView}>
-					<Text style={styles.title}>SplitCheck</Text>
-					<Text style={styles.subtitle}>
+					<Text category="h1" style={styles.title}>
+						SplitCheck
+					</Text>
+					<Text category="c1" style={styles.subtitle}>
 						{isSignUp ? "Please create your account with an email and password" : "Please enter your email and password to sign in"}
 					</Text>
 					<View style={styles.inputContainer}>
@@ -91,7 +94,7 @@ const Landing = () => {
 					</View>
 					<Text style={styles.switchText}>
 						{isSignUp ? "Already have an account? " : "Don't have an account? "}
-						<Text style={styles.switchLink} onPress={() => setIsSignUp(!isSignUp)}>
+						<Text appearance="hint" onPress={() => setIsSignUp(!isSignUp)}>
 							{isSignUp ? "Sign In" : "Sign Up"}
 						</Text>
 					</Text>
@@ -116,31 +119,22 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 	},
-	title: {
-		fontSize: 24,
-		fontWeight: "bold",
-		marginBottom: 16,
-		textAlign: "center",
-	},
-	subtitle: {
-		fontSize: 16,
-		marginBottom: 32,
-		textAlign: "center",
-		color: "gray",
-	},
 	inputContainer: {
 		width: "80%",
 		alignSelf: "center",
 	},
+	title: {
+		textAlign: "center",
+		marginBottom: 16,
+	},
+	subtitle: {
+		textAlign: "center",
+		marginBottom: 32,
+	},
 	input: {
-		height: 40,
-		borderWidth: 1,
 		marginBottom: 12,
-		paddingHorizontal: 8,
-		width: "100%",
 	},
 	button: {
-		marginHorizontal: 16,
 		marginVertical: 16,
 		width: "50%",
 		alignSelf: "center",
@@ -148,9 +142,6 @@ const styles = StyleSheet.create({
 	switchText: {
 		textAlign: "center",
 		marginTop: 16,
-	},
-	switchLink: {
-		color: "#3366FF",
 	},
 })
 

@@ -5,6 +5,5 @@
 - should you be able to set a profile picture when creating an account?
 - ability to edit account
 - limit image file size to 10MB before uploading to Mindee
-- Make login a keyboard avoiding view
-- "Password" button on ios keyboard flashes while typing (weird bug)
+- "Password" button on ios keyboard flashes while typing (known bug with ios not our problem)
 - If password is not secure enough, use a diff message besides "Error"
