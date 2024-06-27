@@ -4,7 +4,7 @@ import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "fire
 import { auth } from "../firebase/firebaseConfig"
 import { Button, Input, Text, useTheme } from "@ui-kitten/components"
 import { Ionicons } from "@expo/vector-icons"
-import { addUser } from "../firebase/firebaseUtils"
+import { addUser, firebaseErrorToString } from "../firebase/firebaseUtils"
 
 const Landing = () => {
 	const [email, setEmail] = useState("")
@@ -33,8 +33,7 @@ const Landing = () => {
 				Alert.alert("Success", `Welcome back ${user.email}`)
 			})
 			.catch((error) => {
-				errorStripped = 
-				Alert.alert("Error", error.message)
+				Alert.alert("Error", firebaseErrorToString(error))
 			})
 	}
 
@@ -48,7 +47,7 @@ const Landing = () => {
 				Alert.alert("Success", `Account created for ${user.email}`)
 			})
 			.catch((error) => {
-				Alert.alert("Error", error.message)
+				Alert.alert("Error", firebaseErrorToString(error))
 			})
 	}
 
