@@ -4,4 +4,3 @@
 - ability to delete profile picture
 - limit image file size to 10MB before uploading to Mindee
 - "Password" button on ios keyboard flashes while typing (known bug with ios not our problem)
-- If password is not secure enough, use a diff message besides "Error"

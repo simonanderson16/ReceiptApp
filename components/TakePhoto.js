@@ -1,39 +1,28 @@
 import React, { useState, useRef } from "react"
 import { StyleSheet, TouchableOpacity, View, Image, SafeAreaView } from "react-native"
 import { CameraView } from "expo-camera"
-import { Button, Text } from "@ui-kitten/components"
+import { Button, Layout, Text } from "@ui-kitten/components"
 
 const TakePhoto = ({ handleConfirmPhoto }) => {
-	const [photoUri, setPhotoUri] = useState(null)
 	const cameraRef = useRef(null)
 
 	const takePhoto = async () => {
 		if (cameraRef.current) {
 			const photo = await cameraRef.current.takePictureAsync()
-			setPhotoUri(photo.uri)
+			handleConfirmPhoto(photo.uri)
 		}
 	}
 
 	return (
-		<SafeAreaView style={styles.container}>
-			{photoUri ? (
-				<View style={styles.previewContainer}>
-					<Image source={{ uri: photoUri }} style={styles.previewImage} />
-					<View style={styles.previewActionsContainer}>
-						<Button appearance="outline" onPress={() => setPhotoUri(null)}>
-							Retake
-						</Button>
-						<Button onPress={() => handleConfirmPhoto(photoUri)}>Confirm</Button>
-					</View>
-				</View>
-			) : (
+		<Layout style={{ flex: 1 }}>
+			<SafeAreaView style={styles.container}>
 				<CameraView style={styles.camera} ref={cameraRef}>
 					<View style={styles.buttonContainer}>
 						<TouchableOpacity style={styles.cameraButton} onPress={takePhoto} />
 					</View>
 				</CameraView>
-			)}
-		</SafeAreaView>
+			</SafeAreaView>
+		</Layout>
 	)
 }
 
