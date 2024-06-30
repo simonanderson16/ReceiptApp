@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons"
 import { useCameraPermissions } from "expo-camera"
 import * as ImagePicker from "expo-image-picker"
 import ImageResizer from "react-native-image-resizer"
-import TakePhoto from "../components/TakePhoto"
+import Camera from "../components/Camera"
 
 import axios from "axios"
 import * as FileSystem from "expo-file-system"
@@ -13,22 +13,22 @@ import * as FileSystem from "expo-file-system"
 export default NewReceipt = () => {
 	const [permission, requestPermission] = useCameraPermissions()
 	const [photoUri, setPhotoUri] = useState(null)
-	const [openTakePhoto, setOpenTakePhoto] = useState(false)
+	const [openCamera, setOpenCamera] = useState(false)
 	const [title, setTitle] = useState("")
 	const [loading, setLoading] = useState(false)
 	const theme = useTheme()
 
-	const handleOpenTakePhoto = async () => {
+	const handleOpenCamera = async () => {
 		if (!permission || !permission.granted) {
 			await requestPermission()
 		} else {
-			setOpenTakePhoto(true)
+			setOpenCamera(true)
 		}
 	}
 
 	const handleConfirmPhoto = (newPhotoUri) => {
 		setPhotoUri(newPhotoUri)
-		setOpenTakePhoto(false)
+		setOpenCamera(false)
 	}
 
 	const pickImage = async () => {
@@ -111,8 +111,8 @@ export default NewReceipt = () => {
 		}
 	}
 
-	if (openTakePhoto) {
-		return <TakePhoto handleConfirmPhoto={handleConfirmPhoto} />
+	if (openCamera) {
+		return <Camera handleConfirmPhoto={handleConfirmPhoto} />
 	}
 
 	return (
@@ -133,7 +133,7 @@ export default NewReceipt = () => {
 					<>
 						<Text category="s1">You can use a photo of a receipt to start out!</Text>
 						<View style={styles.photoButtons}>
-							<Button style={styles.button} onPress={() => handleOpenTakePhoto()}>
+							<Button style={styles.button} onPress={() => handleOpenCamera()}>
 								Take Photo
 							</Button>
 							<Button style={styles.button} onPress={() => pickImage()}>
@@ -142,7 +142,7 @@ export default NewReceipt = () => {
 						</View>
 					</>
 				)}
-				<Button style={styles.continueButton}>Continue</Button>
+				<Button disabled={loading} style={styles.continueButton}>Continue</Button>
 			</SafeAreaView>
 		</Layout>
 	)
