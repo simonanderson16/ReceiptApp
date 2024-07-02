@@ -4,7 +4,7 @@ import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "fire
 import { auth } from "../firebase/firebaseConfig"
 import { Layout, Button, Input, Text, useTheme } from "@ui-kitten/components"
 import { Ionicons } from "@expo/vector-icons"
-import { addUser, firebaseErrorToString } from "../firebase/firebaseUtils"
+import { addUser, firebaseErrorToString, userNameExists } from "../firebase/firebaseUtils"
 
 const Landing = () => {
 	const [email, setEmail] = useState("")
@@ -41,13 +41,17 @@ const Landing = () => {
 			})
 	}
 
-	const handleSignUp = () => {
+	const handleSignUp = async () => {
+		if (await userNameExists(userName)) {
+			Alert.alert("Username already exists", "Please choose a different username.")
+			return
+		}
 		createUserWithEmailAndPassword(auth, email, password)
 			.then((userCredential) => {
 				const user = userCredential.user
 				const email = user.email
 				const uid = user.uid
-				addUser({ uid, data: { email, firstName, lastName, userName } })
+				addUser({ uid, data: { email, firstName: firstName.strip(), lastName: lastName.strip(), userName: userName.strip() } })
 				Alert.alert("Success", `Account created for ${user.email}`)
 			})
 			.catch((error) => {

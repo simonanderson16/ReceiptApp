@@ -4,7 +4,7 @@ import { useState } from "react"
 import * as ImagePicker from "expo-image-picker"
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage"
 import { auth, storage } from "../firebase/firebaseConfig"
-import { setProfilePic, updateProfile } from "../firebase/firebaseUtils"
+import { setProfilePic, updateProfile, userNameExists } from "../firebase/firebaseUtils"
 
 const EditProfile = ({ userInfo, setUserInfo, setEditing, setLoading }) => {
 	const [selectedImage, setSelectedImage] = useState(userInfo.profilePic)
@@ -51,6 +51,10 @@ const EditProfile = ({ userInfo, setUserInfo, setEditing, setLoading }) => {
 	}
 
 	const handleConfirm = async () => {
+        if (await userNameExists(selectedUserName)) {
+            Alert.alert("Username already exists", "Please choose a different username.")
+            return
+        }
 		setLoading(true)
 		await confirmImage()
 		await updateProfile(auth.currentUser.uid, {

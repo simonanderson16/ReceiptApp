@@ -1,6 +1,6 @@
 import { db, storage } from "./firebaseConfig"
 import { ref, getDownloadURL } from "firebase/storage"
-import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore"
+import { doc, setDoc, getDoc, updateDoc, collection, where, query, getDocs } from "firebase/firestore"
 import { AuthErrorCodes } from "firebase/auth"
 
 export const addUser = async (user) => {
@@ -51,6 +51,18 @@ export const updateProfile = async (uid, data) => {
         console.error("Error updating profile: ", error);
         return false;
     }
+}
+
+export const userNameExists = async (userName) => {
+	try {
+		const usersRef = collection(db, "users");
+		const q = query(usersRef, where("userName", "==", userName));
+		const querySnapshot = await getDocs(q);
+		return querySnapshot.size > 0;
+	} catch (error) {
+		console.error("Error checking if username exists: ", error);
+		return true;
+	}
 }
 
 //https://stackoverflow.com/questions/72998085/firestore-error-code-to-human-readable-message
