@@ -21,7 +21,7 @@ const Profile = () => {
 
 	return (
 		<Layout style={{ flex: 1 }}>
-			<SafeAreaView style={styles.container}>
+			<SafeAreaView style={loading ? styles.loadingContainer : styles.container}>
 				{loading ? (
 					<Spinner size="giant" />
 				) : editing ? (
@@ -51,6 +51,11 @@ const Profile = () => {
 }
 
 const styles = StyleSheet.create({
+    loadingContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
 	container: {
 		flex: 1,
 		paddingTop: 160,
